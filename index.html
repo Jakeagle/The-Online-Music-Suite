@@ -20,6 +20,21 @@
     <!-- Custom Styles -->
     <link rel="stylesheet" href="style.css" />
     <style>
+      body {
+        height: 100vh; /* Full height for centering */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0; /* Remove default margin */
+        position: relative; /* Position for absolute elements */
+      }
+      .navbar {
+        position: absolute; /* Keep navbar at the top */
+        top: 0;
+        width: 100%; /* Full width */
+        z-index: 1000; /* Make sure it stays above other elements */
+      }
       .track {
         display: flex;
         align-items: center;
@@ -38,7 +53,7 @@
       .track-area {
         flex-grow: 1;
         border: 1px dashed #aaa; /* Dashed border for visualization area */
-        height: 50px; /* Fixed height for track area */
+        height: 30px; /* Adjusted height for track area */
         position: relative;
       }
       .track-area::before {
@@ -48,6 +63,34 @@
         left: 50%;
         transform: translate(-50%, -50%);
         color: #888; /* Light gray color for placeholder text */
+      }
+      /* Animation Styles */
+      .animated-title,
+      .animated-subtitle {
+        opacity: 0; /* Start hidden */
+        transform: translateY(0) scale(2); /* Start larger and centered */
+        transition: opacity 1s ease, transform 1s ease; /* Transition settings */
+      }
+
+      .piano {
+        opacity: 0; /* Start hidden */
+        transition: opacity 1s ease; /* Fade in transition */
+      }
+
+      .navbar,
+      .footer,
+      .track-section {
+        opacity: 0; /* Start hidden */
+        transition: opacity 1s ease; /* Fade in transition */
+      }
+
+      /* Add classes for visible state */
+      .visible {
+        opacity: 1;
+      }
+
+      .track-section {
+        display: none; /* Hide track section initially */
       }
     </style>
   </head>
@@ -87,13 +130,17 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="container text-center my-5">
+    <div class="container text-center my-5" style="margin-top: 80px">
       <h1 class="animated-title">The Online Music Suite</h1>
-      <p class="lead">Create your own songs online with this simple app.</p>
-      <div id="piano" class="d-flex justify-content-center"></div>
+      <p class="lead animated-subtitle">
+        Create your own songs online with this simple app.
+      </p>
+
+      <!-- Piano Section -->
+      <div id="piano" class="d-flex justify-content-center piano"></div>
 
       <!-- Track Management Section -->
-      <div id="track-section" class="mt-5">
+      <div id="track-section" class="track-section mt-5">
         <h2>Manage Tracks</h2>
         <div id="track-list" class="mb-3"></div>
         <div class="d-flex justify-content-start mb-3">
@@ -112,7 +159,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-light text-center text-lg-start">
+    <footer class="bg-light text-center text-lg-start footer">
       <div class="container p-4">
         <div class="text-center p-3">
           © 2024 Piano Web App |
@@ -129,6 +176,38 @@
     <script src="script.js"></script>
 
     <script>
+      // Opening animations
+      $(document).ready(function () {
+        // Fade in title
+        $(".animated-title").addClass("visible");
+
+        setTimeout(function () {
+          // Fade in subtitle
+          $(".animated-subtitle").addClass("visible");
+        }, 1000); // Wait 1 second before fading in the subtitle
+
+        setTimeout(function () {
+          // Show title and subtitle then translate up
+          $(".animated-title").css("transform", "translateY(-50%) scale(1)"); // Move up and scale down
+          $(".animated-subtitle").css("transform", "translateY(-50%) scale(1)"); // Move up and scale down
+        }, 3000); // Wait 3 seconds before translating
+
+        setTimeout(function () {
+          // Fade in piano after title and subtitle animation
+          $("#piano").addClass("visible");
+        }, 4000); // Wait 4 seconds after title and subtitle
+
+        setTimeout(function () {
+          // Fade in navbar
+          $(".navbar").addClass("visible");
+        }, 5000); // Wait 5 seconds after piano
+
+        setTimeout(function () {
+          // Show track section
+          $(".track-section").css("display", "block").addClass("visible");
+        }, 6000); // Wait 6 seconds after navbar
+      });
+
       // Track Management Logic
       let trackCounter = 0;
 
@@ -164,8 +243,21 @@
         $(`#${trackId}`).remove();
       }
 
-      // Event listener for the add track button
-      $("#add-track").on("click", addTrack);
+      $(document).on("click", "#add-track", addTrack);
+      $(document).on("click", "#remove-track", function () {
+        if (trackCounter > 0) {
+          removeTrack(`track-${trackCounter}`);
+          trackCounter--;
+        }
+      });
+
+      $(document).on("click", "#save-track", function () {
+        alert("Tracks saved successfully!");
+      });
+
+      $(document).on("click", "#export-track", function () {
+        alert("Tracks exported successfully!");
+      });
     </script>
   </body>
 </html>
