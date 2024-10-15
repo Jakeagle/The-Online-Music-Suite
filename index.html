@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Online Music Suite</title>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .track {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      .control-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+        width: 50px; /* Fixed width for control area */
+        margin-right: 10px; /* Spacing between control and track area */
+      }
+      .track-area {
+        flex-grow: 1;
+        border: 1px dashed #aaa; /* Dashed border for visualization area */
+        height: 50px; /* Fixed height for track area */
+        position: relative;
+      }
+      .track-area::before {
+        content: "MIDI Notes Visual";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #888; /* Light gray color for placeholder text */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">The Online Music Suite</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container text-center my-5">
+      <h1 class="animated-title">The Online Music Suite</h1>
+      <p class="lead">Create your own songs online with this simple app.</p>
+      <div id="piano" class="d-flex justify-content-center"></div>
+
+      <!-- Track Management Section -->
+      <div id="track-section" class="mt-5">
+        <h2>Manage Tracks</h2>
+        <div id="track-list" class="mb-3"></div>
+        <div class="d-flex justify-content-start mb-3">
+          <button id="add-track" class="btn btn-primary me-2">Add Track</button>
+          <button id="remove-track" class="btn btn-danger me-2">
+            Remove Track
+          </button>
+          <button id="save-track" class="btn btn-warning me-2">
+            Save Track
+          </button>
+          <button id="export-track" class="btn btn-success">
+            Export Track
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center text-lg-start">
+      <div class="container p-4">
+        <div class="text-center p-3">
+          © 2024 Piano Web App |
+          <a class="text-dark" href="#">Privacy Policy</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS & jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom Scripts -->
+    <script src="script.js"></script>
+
+    <script>
+      // Track Management Logic
+      let trackCounter = 0;
+
+      function addTrack() {
+        trackCounter++;
+        const trackId = `track-${trackCounter}`;
+
+        const trackHTML = `
+          <div class="track" id="${trackId}">
+            <div class="control-buttons">
+              <button class="btn btn-info btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Instrument
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Piano</a></li>
+                <li><a class="dropdown-item" href="#">Guitar</a></li>
+                <li><a class="dropdown-item" href="#">Violin</a></li>
+                <li><a class="dropdown-item" href="#">Flute</a></li>
+                <li><a class="dropdown-item" href="#">Drums</a></li>
+              </ul>
+              <button class="btn btn-success btn-sm">R</button> <!-- Record -->
+              <button class="btn btn-info btn-sm">P</button> <!-- Playback -->
+              <button class="btn btn-danger btn-sm" onclick="removeTrack('${trackId}')">X</button> <!-- Remove -->
+            </div>
+            <div class="track-area"></div>
+          </div>
+        `;
+
+        $("#track-list").append(trackHTML);
+      }
+
+      function removeTrack(trackId) {
+        $(`#${trackId}`).remove();
+      }
+
+      // Event listener for the add track button
+      $("#add-track").on("click", addTrack);
+    </script>
+  </body>
+</html>
